@@ -68,7 +68,10 @@ export function PokemonsProvider({ children }: PokemonsProviderProps) {
           _id: card?._id,
         });
       } else {
-        pokemonsOnAlbum.push(card.pokemon);
+        pokemonsOnAlbum.push({
+          ...card.pokemon,
+          _id: card?._id,
+        });
       }
     });
 
@@ -87,17 +90,16 @@ export function PokemonsProvider({ children }: PokemonsProviderProps) {
     localStorage.setItem("@pokemon-last-time-clicked", String(lastTimeClicked));
     setPackageAvailable(false);
 
-    await handleSaveManyCards(CARD_QTD_PER_PACKAGE);
+    await handleSaveManyCards(CARD_QTD_PER_PACKAGE, pokemonListState);
     setLoading(false);
   };
 
   const handleSortCards = () => {
-    let list = pokemonListState;
+    let list = [...pokemonListState];
     list.sort((a, b) => a.id - b.id);
     setPokemonListState(list);
-
-    setMaxCards(5);
-    setMinCards(0);
+    if (maxCards !== 5) setMaxCards(5);
+    if (maxCards !== 0) setMinCards(0);
   };
 
   const handleChangeCards = (direction: "prev" | "next") => {
@@ -110,10 +112,17 @@ export function PokemonsProvider({ children }: PokemonsProviderProps) {
     }
   };
 
-  const updatePokemonList = (uniqueId: string) => {
-    setPokemonListState((prevState) =>
-      prevState.filter((pokemon) => pokemon.unique_id !== uniqueId)
-    );
+  const updatePokemonList = (
+    operation: "add" | "delete",
+    pokemon: IPokemon
+  ) => {
+    if (operation === "add") {
+      setPokemonListState([...pokemonListState, pokemon]);
+    } else {
+      setPokemonListState((prevState) =>
+        prevState.filter((poke) => poke.unique_id !== pokemon.unique_id)
+      );
+    }
   };
 
   const toggleRepeatedPokemon = (pokemon: IPokemon) => {
@@ -133,28 +142,27 @@ export function PokemonsProvider({ children }: PokemonsProviderProps) {
         repeatedCards.length / MIN_QTD_TO_TRADE
       );
       const repeatedCardsQtdToTrade = cardQtdToReceive * MIN_QTD_TO_TRADE;
+      let newPokemonListState = [...pokemonListState];
       await Promise.all(
         repeatedCards.slice(0, repeatedCardsQtdToTrade).map(async (poke) => {
-          setPokemonListState((prevState) =>
-            prevState.filter((pokemon) => pokemon._id !== poke._id)
-          );
+          const index = newPokemonListState.indexOf(poke);
+          newPokemonListState.splice(index, 1);
           await axios.delete(`/api/cards/${poke._id}`);
         })
       );
-
+      setPokemonListState(newPokemonListState);
       const remainingRepeatedPokemons = repeatedCards.slice(
         repeatedCardsQtdToTrade,
         repeatedCards.length
       );
       setRepeatedCards(remainingRepeatedPokemons);
-      //Filtra as que faltam no album (Talvez)
-      //Busca uma aleatória
-      await handleSaveManyCards(cardQtdToReceive);
+
+      await handleSaveManyCards(cardQtdToReceive, newPokemonListState);
       setLoading(false);
     }
   };
 
-  const handleSaveManyCards = async (qtd: number) => {
+  const handleSaveManyCards = async (qtd: number, pokemonList: IPokemon[]) => {
     let count = 1;
     let pokeArray = [];
 
@@ -180,9 +188,9 @@ export function PokemonsProvider({ children }: PokemonsProviderProps) {
       count++;
     }
 
-    setPokemonListState([...pokemonListState, ...pokeArray]);
-    setMaxCards([...pokemonListState, ...pokeArray].length);
-    setMinCards([...pokemonListState, ...pokeArray].length - 5);
+    setPokemonListState([...pokemonList, ...pokeArray]);
+    setMaxCards([...pokemonList, ...pokeArray].length);
+    setMinCards([...pokemonList, ...pokeArray].length - 5);
   };
 
   useEffect(() => {

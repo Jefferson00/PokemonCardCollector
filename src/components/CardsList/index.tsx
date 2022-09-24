@@ -64,9 +64,9 @@ export function CardsList() {
                   handle=".handle"
                   defaultPosition={{ x: 0, y: 0 }}
                   scale={1}
-                  onStop={(_, ui) =>
-                    handleStopDrag(ui, pokemon.id, pokemon.unique_id)
-                  }
+                  onStop={(_, ui) => {
+                    handleStopDrag(ui, pokemon.id, pokemon.unique_id);
+                  }}
                 >
                   <div className="handle">
                     <Card pokemon={pokemon} />

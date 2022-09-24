@@ -15,6 +15,7 @@ export function StarShine() {
     for (let i = 0; i < 6; i++) {
       stars.push(
         <Image
+          key={i}
           transform={"scale(0)"}
           transition="all 0.4s ease-in-out"
           animation={`${spin} 5s infinite ${i}s`}

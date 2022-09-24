@@ -23,7 +23,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           .collection("cards")
           .find({ user_email: session?.user?.email })
           .toArray();
-        // console.log(cards);
         res.status(200).json(cards);
       } catch (error) {
         console.log("get all error", error);

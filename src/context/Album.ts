@@ -15,7 +15,7 @@ interface AlbumContextData {
     ui: DraggableData,
     pokemonId: number,
     uniqueId: string
-  ) => void;
+  ) => Promise<void>;
 }
 
 export const AlbumContext = createContext({} as AlbumContextData);

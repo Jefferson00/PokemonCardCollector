@@ -48,13 +48,13 @@ export function AlbumProvider({ children }: AlbumProviderProps) {
     setPage(Math.floor(getRegionPokedex(region) / 10) + 1);
   };
 
-  const updatePokemonOnDB = async (pokemon: IPokemon) => {
+  const updatePokemonOnDB = async (pokemon: IPokemon, on_album: boolean) => {
     await axios.put(`/api/cards/${pokemon._id}`, {
-      on_album: true,
+      on_album,
     });
   };
 
-  const handleStopDrag = (
+  const handleStopDrag = async (
     ui: DraggableData,
     pokemonId: number,
     uniqueId: string
@@ -73,18 +73,28 @@ export function AlbumProvider({ children }: AlbumProviderProps) {
       const poke =
         pokemonListState.find((p) => p.unique_id === uniqueId) || null;
 
-      updatePokemonList(uniqueId);
+      let pokemonToRemoveFromAlbum = null;
 
       setAlbumState((prevState) =>
         prevState.map((state) => {
           if (state.id === pokemonId) {
+            if (state.pokemon) {
+              pokemonToRemoveFromAlbum = state.pokemon;
+            }
             return { ...state, pokemon: poke };
           }
           return state;
         })
       );
 
-      if (poke) updatePokemonOnDB(poke);
+      if (pokemonToRemoveFromAlbum) {
+        updatePokemonList("add", pokemonToRemoveFromAlbum);
+        await updatePokemonOnDB(pokemonToRemoveFromAlbum, false);
+      }
+      if (poke) {
+        updatePokemonList("delete", poke);
+        await updatePokemonOnDB(poke, true);
+      }
     }
   };
 

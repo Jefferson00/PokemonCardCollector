@@ -30,7 +30,7 @@ export function Header({ pokemon }: HeaderProps) {
     usePokemons();
 
   const handleDeleteCard = async () => {
-    updatePokemonList(pokemon.unique_id);
+    updatePokemonList("delete", pokemon);
     await axios.delete(`/api/cards/${pokemon._id}`);
   };
 

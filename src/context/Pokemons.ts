@@ -17,7 +17,7 @@ interface PokemonsContextData {
   handleSortCards: () => void;
   handleGetPokemons: () => Promise<void>;
   handleChangeCards: (direction: "prev" | "next") => void;
-  updatePokemonList: (uniqueId: string) => void;
+  updatePokemonList: (operation: "add" | "delete", pokemon: IPokemon) => void;
 }
 
 export const PokemonsContext = createContext({} as PokemonsContextData);
