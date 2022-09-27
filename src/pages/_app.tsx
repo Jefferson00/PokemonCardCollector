@@ -7,17 +7,24 @@ import { PokemonsProvider } from "../containers/PokemonsProvider";
 import "../styles/globals.css";
 
 import { theme } from "../styles/theme";
+import { SidebarDrawerProvider } from "../containers/SidebarDrawerProvider";
+import Head from "next/head";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <SessionProvider session={pageProps.session}>
-      <PokemonsProvider>
-        <AlbumProvider>
-          <ChakraProvider theme={theme}>
-            <Component {...pageProps} />
-          </ChakraProvider>
-        </AlbumProvider>
-      </PokemonsProvider>
+      <ChakraProvider theme={theme}>
+        <SidebarDrawerProvider>
+          <PokemonsProvider>
+            <AlbumProvider>
+              <Head>
+                <title>Pokémon Card Collector</title>
+              </Head>
+              <Component {...pageProps} />
+            </AlbumProvider>
+          </PokemonsProvider>
+        </SidebarDrawerProvider>
+      </ChakraProvider>
     </SessionProvider>
   );
 }
