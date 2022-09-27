@@ -24,6 +24,7 @@ export function PokeballButton() {
     packageAvailable,
     seconds,
     minutes,
+    loading,
   } = usePokemons();
   const isDrawerSidebar = useBreakpointValue({
     base: true,
@@ -53,7 +54,11 @@ export function PokeballButton() {
         bg="gray.800"
         animation={packageAvailable ? animation : "none"}
       >
-        <TopSide isOpen={!packageAvailable} onOpen={onOpen} />
+        <TopSide
+          isOpen={!packageAvailable}
+          onOpen={onOpen}
+          isLoading={loading}
+        />
         {!packageAvailable && nextTimeToOpenPackage && (
           <Inside
             minuteLeft={minuteLeft}

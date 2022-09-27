@@ -2,10 +2,11 @@ import { Box, Button } from "@chakra-ui/react";
 
 interface TopSideProps {
   isOpen: boolean;
+  isLoading?: boolean;
   onOpen: () => Promise<void>;
 }
 
-export function TopSide({ isOpen, onOpen }: TopSideProps) {
+export function TopSide({ isOpen, onOpen, isLoading = false }: TopSideProps) {
   return (
     <Box
       bg="red.500"
@@ -18,8 +19,12 @@ export function TopSide({ isOpen, onOpen }: TopSideProps) {
       zIndex={3}
     >
       <Button
+        isLoading={isLoading}
+        _loading={{
+          color: "gray.300",
+        }}
         onClick={onOpen}
-        disabled={isOpen}
+        disabled={isOpen || isLoading}
         position="absolute"
         bottom="-60%"
         transform="translateY(-30%)"
