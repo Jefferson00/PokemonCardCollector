@@ -2,7 +2,7 @@ import api from "../services/api";
 import { ReactNode, useEffect, useState } from "react";
 import { PokemonsContext } from "../context/Pokemons";
 import { IAlbum, ICard, IPokemon } from "../utils/interfaces";
-import { addMinutes, format, isAfter, isBefore } from "date-fns";
+import { addMinutes, isAfter, isBefore } from "date-fns";
 import axios, { AxiosResponse } from "axios";
 import { useSession } from "next-auth/react";
 import { v4 as uuidv4 } from "uuid";
@@ -14,7 +14,7 @@ import {
   SHINY_PROBABILITY,
 } from "../utils/constants";
 import { getAlbumList } from "../utils/getAlbumList";
-import { ObjectId } from "mongodb";
+import { useBreakpointValue } from "@chakra-ui/react";
 
 interface PokemonsProviderProps {
   children: ReactNode;
@@ -22,6 +22,13 @@ interface PokemonsProviderProps {
 
 export function PokemonsProvider({ children }: PokemonsProviderProps) {
   const { data } = useSession();
+
+  const isWideVersion = useBreakpointValue({
+    base: false,
+    lg: true,
+  });
+
+  const MAX_CARDS = isWideVersion ? 5 : 1;
 
   const currentDate = new Date().getTime();
   const [loading, setLoading] = useState(true);
@@ -32,7 +39,7 @@ export function PokemonsProvider({ children }: PokemonsProviderProps) {
     new Date()
   );
   const [minCards, setMinCards] = useState(0);
-  const [maxCards, setMaxCards] = useState(5);
+  const [maxCards, setMaxCards] = useState(MAX_CARDS);
   const [timeleft, setTimeleft] = useState(
     nextTimeToOpenPackage.getTime() - currentDate
   );
@@ -87,7 +94,19 @@ export function PokemonsProvider({ children }: PokemonsProviderProps) {
       addMinutes(new Date(lastTimeClicked), PACKAGE_TIMOUT)
     );
 
-    localStorage.setItem("@pokemon-last-time-clicked", String(lastTimeClicked));
+    const response = await axios.get("/api/control/");
+
+    if (response.data.length > 0) {
+      await axios.put(`/api/control/${response.data[0]._id}`, {
+        date: lastTimeClicked,
+      });
+    } else {
+      await axios.post(`/api/control`, {
+        date: lastTimeClicked,
+        user_email: data?.user?.email,
+      });
+    }
+
     setPackageAvailable(false);
 
     await handleSaveManyCards(CARD_QTD_PER_PACKAGE, pokemonListState);
@@ -98,17 +117,17 @@ export function PokemonsProvider({ children }: PokemonsProviderProps) {
     let list = [...pokemonListState];
     list.sort((a, b) => a.id - b.id);
     setPokemonListState(list);
-    if (maxCards !== 5) setMaxCards(5);
+    if (maxCards !== MAX_CARDS) setMaxCards(MAX_CARDS);
     if (maxCards !== 0) setMinCards(0);
   };
 
   const handleChangeCards = (direction: "prev" | "next") => {
     if (direction === "prev" && minCards > 0) {
-      setMaxCards(maxCards - 5);
-      setMinCards(minCards - 5);
+      setMaxCards(maxCards - MAX_CARDS);
+      setMinCards(minCards - MAX_CARDS);
     } else if (direction === "next" && maxCards < pokemonListState.length) {
-      setMaxCards(maxCards + 5);
-      setMinCards(minCards + 5);
+      setMaxCards(maxCards + MAX_CARDS);
+      setMinCards(minCards + MAX_CARDS);
     }
   };
 
@@ -184,30 +203,38 @@ export function PokemonsProvider({ children }: PokemonsProviderProps) {
       pokeArray.push({
         ...pokemon,
         _id: response.data.insertedId,
+        is_new: true,
       });
       count++;
     }
 
     setPokemonListState([...pokemonList, ...pokeArray]);
     setMaxCards([...pokemonList, ...pokeArray].length);
-    setMinCards([...pokemonList, ...pokeArray].length - 5);
+    setMinCards([...pokemonList, ...pokeArray].length - MAX_CARDS);
   };
 
-  useEffect(() => {
-    const lastTimeClicked = localStorage.getItem("@pokemon-last-time-clicked");
-    if (lastTimeClicked) {
+  const getLastTimeOpen = async () => {
+    const response = await axios.get("/api/control");
+    if (response.data.length > 0) {
+      const lastTimeOpen = response.data[0];
+
       setNextTimeToOpenPackage(
-        addMinutes(new Date(lastTimeClicked), PACKAGE_TIMOUT)
+        addMinutes(new Date(lastTimeOpen?.date), PACKAGE_TIMOUT)
       );
+
       if (
         isBefore(
           new Date(),
-          addMinutes(new Date(lastTimeClicked), PACKAGE_TIMOUT)
+          addMinutes(new Date(lastTimeOpen?.date), PACKAGE_TIMOUT)
         )
       ) {
         setPackageAvailable(false);
       }
     }
+  };
+
+  useEffect(() => {
+    getLastTimeOpen();
   }, []);
 
   useEffect(() => {
@@ -229,6 +256,10 @@ export function PokemonsProvider({ children }: PokemonsProviderProps) {
   useEffect(() => {
     getPokemonOnDB();
   }, []);
+
+  useEffect(() => {
+    setMaxCards(MAX_CARDS);
+  }, [MAX_CARDS]);
 
   return (
     <PokemonsContext.Provider
