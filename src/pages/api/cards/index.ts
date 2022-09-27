@@ -10,14 +10,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       let projectCreated = await db.collection("cards").insertOne(req.body);
       res.status(200).json(projectCreated);
     } catch (error) {
-      console.log("create error:", error);
       res.status(500).send(error);
     }
   } else if (req.method === "GET") {
     const session = await getSession({ req });
     if (session?.user?.email) {
       const db = await connectToDatabase(process.env.MONGODB_URI || "");
-      console.log("user", session?.user?.email);
       try {
         const cards = await db
           .collection("cards")
@@ -25,7 +23,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           .toArray();
         res.status(200).json(cards);
       } catch (error) {
-        console.log("get all error", error);
         res.status(500).send(error);
       }
     } else {

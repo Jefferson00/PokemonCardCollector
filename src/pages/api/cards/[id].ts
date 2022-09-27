@@ -8,13 +8,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query;
   switch (req.method) {
     default:
-      res.setHeader("Allow", "POST, GET");
+      res.setHeader("Allow", "PUT, DELETE");
       return res.status(405).send("Method not allowed");
-      break;
-
-    case "GET": {
-      return res.json({});
-    }
 
     case "PUT": {
       const objectId = new ObjectId(String(id));
@@ -23,9 +18,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         await db
           .collection("cards")
           .updateOne({ _id: objectId }, { $set: req.body });
-        return res.json({});
+        return res.status(200).json({
+          message: "Card atualizado com sucesso!",
+        });
       } catch (error) {
-        console.log("update error", error);
         return res.status(500).send(error);
       }
     }
@@ -35,7 +31,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
       try {
         await db.collection("cards").deleteOne({ _id: objectId });
-        return res.status(500).json({});
+        return res.status(200).json({
+          message: "Card deletado com sucesso!",
+        });
       } catch (error) {
         return res.status(500).send(error);
       }

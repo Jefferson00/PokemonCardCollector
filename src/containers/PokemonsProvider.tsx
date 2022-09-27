@@ -186,6 +186,8 @@ export function PokemonsProvider({ children }: PokemonsProviderProps) {
     let pokeArray = [];
 
     while (count <= qtd) {
+      console.log("count", count);
+
       const pokemon = await handleGetRandomPokemon();
       const response: AxiosResponse = await axios.post("/api/cards", {
         pokemon: {
@@ -200,6 +202,7 @@ export function PokemonsProvider({ children }: PokemonsProviderProps) {
         on_album: false,
         user_email: data?.user?.email,
       });
+      console.log("response", response);
       pokeArray.push({
         ...pokemon,
         _id: response.data.insertedId,
