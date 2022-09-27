@@ -14,7 +14,7 @@ export function Album() {
       borderRadius="20px"
       py="6"
     >
-      <HStack>
+      <HStack spacing="6">
         <Heading as="h3" size="lg">
           Meu Album
         </Heading>

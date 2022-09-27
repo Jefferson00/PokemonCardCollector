@@ -65,7 +65,7 @@ export function CardsList() {
       p="4"
       gap="8"
     >
-      {!loading && (
+      {!loading && pokemonListState.length > 0 && (
         <HStack>
           <ArrowButton
             onClick={() => handleChangeCards("prev")}
