@@ -1,13 +1,5 @@
-import {
-  AbsoluteCenter,
-  Box,
-  Flex,
-  HStack,
-  Image,
-  Text,
-} from "@chakra-ui/react";
+import { AbsoluteCenter, Flex, Image, Text } from "@chakra-ui/react";
 import { useAlbum } from "../../hooks/useAlbum";
-import { IAlbum } from "../../utils/interfaces";
 import Card from "../Card";
 
 export function List() {
@@ -25,6 +17,7 @@ export function List() {
           borderRadius="20px"
           key={state.id}
           ref={refs.current[state.id - 1]}
+          border={state.pokemon ? "none" : "2px solid #fff"}
         >
           {state.pokemon ? (
             <Card pokemon={state.pokemon} onAlbum />
