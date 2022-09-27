@@ -1,9 +1,9 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import { FaunaAdapter } from "@next-auth/fauna-adapter";
 import EmailProvider from "next-auth/providers/email";
 import { fauna } from "../../../services/fauna";
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     EmailProvider({
       server: {
@@ -23,5 +23,6 @@ export const authOptions = {
     signIn: "/home",
     signOut: "/",
   },
+  secret: process.env.SECRET,
 };
 export default NextAuth(authOptions);

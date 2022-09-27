@@ -1,16 +1,13 @@
-import { MongoClient, Db } from "mongodb";
+import { MongoClient } from "mongodb";
 
-let cachedDb: Db = null;
+let cachedDb: any = null;
 
 export async function connectToDatabase(uri: string) {
   if (cachedDb) {
     return cachedDb;
   }
 
-  const client = await MongoClient.connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  const client = new MongoClient(uri);
 
   const db = client.db("pokemon-collector");
 
