@@ -15,6 +15,7 @@ export interface IPokemon {
   unique_id: string;
   ref_id?: string;
   _id?: string;
+  is_new?: boolean;
 }
 
 export interface ITypes {
