@@ -1,13 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 import { useMemo, useState } from "react";
 import { useAlbum } from "../../hooks/useAlbum";
-import { getBackgroundColorFromType } from "../../utils/getBackgroundColorFromType";
 import { IPokemon } from "../../utils/interfaces";
 import { BackPart } from "./BackPart";
+import { Container } from "./Container";
 import { FrontPart } from "./FrontPart";
 import { Header } from "./Header";
 import { PokemonName } from "./PokemonName";
-import * as S from "./styles";
 import { TypeBackground } from "./TypeBackground";
 
 interface CardProps {
@@ -37,12 +36,13 @@ export default function Card({ pokemon, onAlbum = false }: CardProps) {
   };
 
   return (
-    <S.Container
-      isShine={pokemon.is_shiny}
-      backgroundColor={getBackgroundColorFromType(pokemon.types[0].type.name)}
+    <Container
       onDoubleClick={() =>
         setCardState((prevState) => (prevState === "front" ? "back" : "front"))
       }
+      typeName={pokemon.types[0].type.name}
+      isShine={pokemon.is_shiny}
+      isNew={pokemon.is_new}
     >
       {isRepeated && !onAlbum && <Header pokemon={pokemon} />}
       <TypeBackground
@@ -68,6 +68,6 @@ export default function Card({ pokemon, onAlbum = false }: CardProps) {
       )}
 
       <PokemonName id={pokemon.id} name={pokemon.name} />
-    </S.Container>
+    </Container>
   );
 }
