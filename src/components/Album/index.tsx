@@ -6,7 +6,14 @@ import { RegionSelector } from "./RegionSelector";
 
 export function Album() {
   return (
-    <Flex flexDir="column" mt="8" align="center">
+    <Flex
+      flexDir="column"
+      mt="8"
+      align="center"
+      bg="gray.800"
+      borderRadius="20px"
+      py="6"
+    >
       <HStack>
         <Heading as="h3" size="lg">
           Meu Album

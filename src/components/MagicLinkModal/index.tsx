@@ -24,18 +24,18 @@ export const MagicLinkModal = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
-      <ModalContent bg="gray.600">
+      <ModalContent bg="gray.700" m="6">
         <ModalHeader>Email enviado</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Text>
+          <Text textAlign="center">
             Te enviamos um e-amil para <strong>{email}</strong>. Verifique sua
             caixa de entrada e clique no link para realizar o login.
           </Text>
         </ModalBody>
 
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={onClose}>
+          <Button colorScheme="orange" mr={3} onClick={onClose}>
             Ok
           </Button>
         </ModalFooter>

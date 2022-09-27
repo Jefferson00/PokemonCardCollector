@@ -6,7 +6,7 @@ export function Pagination() {
   const { handleChangePage, page, albumState, max } = useAlbum();
 
   return (
-    <Flex justify="center" w="100%" mt="6" gap="8">
+    <Flex justify="center" w="100%" mt="2" gap="8">
       <ArrowButton
         onClick={() => handleChangePage("prev")}
         disabled={page <= 1}

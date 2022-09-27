@@ -22,6 +22,7 @@ const signInFormSchema = yup.object().shape({
 const Home = () => {
   const [isSendingMail, setIsSendingMail] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [email, setEmail] = useState("");
 
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(signInFormSchema),
@@ -29,6 +30,7 @@ const Home = () => {
 
   const handleSignIn: SubmitHandler<any> = async (data: SignInFormProps) => {
     setIsSendingMail(true);
+    setEmail(data.email);
     try {
       await signIn("email", {
         email: data.email,
@@ -52,6 +54,7 @@ const Home = () => {
         h="100vh"
         flexDir="column"
         gap="4"
+        p="6"
       >
         <Image
           src="/assets/poke-logo-2.svg"
@@ -89,7 +92,7 @@ const Home = () => {
         </Flex>
       </Flex>
       <MagicLinkModal
-        email="teste"
+        email={email}
         isOpen={showModal}
         onClose={() => {
           setShowModal(false);

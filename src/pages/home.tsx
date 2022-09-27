@@ -1,13 +1,20 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, useBreakpointValue } from "@chakra-ui/react";
 import type { GetServerSideProps, NextPage } from "next";
 import { Album } from "../components/Album";
 import { CardsList } from "../components/CardsList";
 import { Sidebar } from "../components/Sidebar";
 import { getSession } from "next-auth/react";
+import { Header } from "../components/Header";
 
 const Homepage: NextPage = () => {
+  const isWideVersion = useBreakpointValue({
+    base: false,
+    lg: true,
+  });
+
   return (
-    <Flex w="100%" mx="auto" pr="6">
+    <Flex w="100%" mx="auto" pr={["0", "6"]} flexDir={["column", "row"]}>
+      {!isWideVersion && <Header />}
       <Sidebar />
       <Flex minH="100vh" mx="auto" my="6" flexDir="column">
         <CardsList />

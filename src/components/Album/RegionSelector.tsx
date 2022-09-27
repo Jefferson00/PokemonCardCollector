@@ -55,7 +55,7 @@ export function RegionSelector() {
   );
 
   return (
-    <Flex gap="6" mt="6">
+    <Flex gap="6" mt="6" flexWrap="wrap" justify="center">
       <RegionButton
         afterContent="'1 ao 151'"
         title="kanto"

@@ -7,16 +7,10 @@ import {
   Stack,
   Text,
   Tooltip,
+  useBreakpointValue,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
 import Draggable from "react-draggable";
-import {
-  FiChevronLeft,
-  FiChevronRight,
-  FiLayers,
-  FiRefreshCw,
-  FiRepeat,
-} from "react-icons/fi";
+import { FiLayers, FiRepeat } from "react-icons/fi";
 import { useAlbum } from "../../hooks/useAlbum";
 import { usePokemons } from "../../hooks/usePokemons";
 import { ArrowButton } from "../ArrowButton";
@@ -35,9 +29,33 @@ export function CardsList() {
   } = usePokemons();
   const { handleStopDrag } = useAlbum();
 
+  const isMobile = useBreakpointValue({
+    base: true,
+    lg: false,
+  });
+
+  const getLoadingSkeleton = () => {
+    const skeletonQtd = isMobile ? 1 : 5;
+    const skeletonArray = [];
+    for (let i = 0; i < skeletonQtd; i++) {
+      skeletonArray.push(
+        <Skeleton
+          key={i}
+          height="16.4rem"
+          w="11.5rem"
+          startColor="gray.500"
+          endColor="gray.600"
+        />
+      );
+    }
+    return skeletonArray;
+  };
+
   return (
     <Flex
       justify="center"
+      align={["center"]}
+      flexDir={["column", "row"]}
       w="100%"
       minH="262px"
       my="0"
@@ -49,12 +67,11 @@ export function CardsList() {
     >
       {!loading && (
         <HStack>
-          {minCards > 0 && (
-            <ArrowButton
-              onClick={() => handleChangeCards("prev")}
-              direction="left"
-            />
-          )}
+          <ArrowButton
+            onClick={() => handleChangeCards("prev")}
+            direction="left"
+            disabled={minCards <= 0}
+          />
           <HStack zIndex={999}>
             {pokemonListState
               .slice(minCards, maxCards)
@@ -74,17 +91,16 @@ export function CardsList() {
                 </Draggable>
               ))}
           </HStack>
-          {maxCards < pokemonListState.length && (
-            <ArrowButton
-              onClick={() => handleChangeCards("next")}
-              direction="right"
-            />
-          )}
+          <ArrowButton
+            onClick={() => handleChangeCards("next")}
+            direction="right"
+            disabled={maxCards >= pokemonListState.length}
+          />
         </HStack>
       )}
 
-      {pokemonListState.length > 0 && (
-        <Stack>
+      {pokemonListState.length > 0 && !loading && (
+        <Stack direction={["row", "column"]} justify={["center", "flex-start"]}>
           <Tooltip label="Organizar" placement="top">
             <Button
               bg="orange.400"
@@ -123,28 +139,7 @@ export function CardsList() {
         </Flex>
       )}
 
-      {loading && (
-        <HStack>
-          <Skeleton
-            height="16.4rem"
-            w="11.5rem"
-            startColor="gray.500"
-            endColor="gray.600"
-          />
-          <Skeleton
-            height="16.4rem"
-            w="11.5rem"
-            startColor="gray.500"
-            endColor="gray.600"
-          />
-          <Skeleton
-            height="16.4rem"
-            w="11.5rem"
-            startColor="gray.500"
-            endColor="gray.600"
-          />
-        </HStack>
-      )}
+      {loading && <HStack>{getLoadingSkeleton()}</HStack>}
     </Flex>
   );
 }
