@@ -8,6 +8,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query;
   switch (req.method) {
     default:
+      res.setHeader("Allow", "POST, GET");
+      return res.status(405).send("Method not allowed");
       break;
 
     case "GET": {
@@ -24,7 +26,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         return res.json({});
       } catch (error) {
         console.log("update error", error);
-        return res.status(500).end(error);
+        return res.status(500).send(error);
       }
     }
 
@@ -33,8 +35,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
       try {
         await db.collection("cards").deleteOne({ _id: objectId });
-      } catch (error) {}
-      return res.json({});
+        return res.status(500).json({});
+      } catch (error) {
+        return res.status(500).send(error);
+      }
     }
   }
 };

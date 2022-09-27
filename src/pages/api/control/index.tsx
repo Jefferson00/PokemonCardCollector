@@ -8,7 +8,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (req.method) {
     default:
-      break;
+      res.setHeader("Allow", "POST, GET");
+      return res.status(405).send("Method not allowed");
 
     case "GET": {
       const session = await getSession({ req });
@@ -21,7 +22,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           return res.status(200).json(lastTimeOpen);
         } catch (error) {
           console.log("get lastTimeOpen error", error);
-          return res.status(500).end(error);
+          return res.status(500).send(error);
         }
       } else {
         return res.status(200).json([]);
@@ -36,7 +37,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(200).json(lastTimeOpen);
       } catch (error) {
         console.log("create error:", error);
-        return res.status(500).end(error);
+        return res.status(500).send(error);
       }
     }
   }

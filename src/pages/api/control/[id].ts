@@ -10,6 +10,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (req.method) {
     default:
+      res.setHeader("Allow", "POST, GET");
+      return res.status(405).send("Method not allowed");
       break;
 
     case "PUT": {
@@ -22,7 +24,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         return res.json({});
       } catch (error) {
         console.log("update error", error);
-        return res.status(500).end(error);
+        return res.status(500).send(error);
       }
     }
 

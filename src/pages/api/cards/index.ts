@@ -11,7 +11,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       res.status(200).json(projectCreated);
     } catch (error) {
       console.log("create error:", error);
-      res.status(500).end(error);
+      res.status(500).send(error);
     }
   } else if (req.method === "GET") {
     const session = await getSession({ req });
@@ -26,13 +26,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(200).json(cards);
       } catch (error) {
         console.log("get all error", error);
-        res.status(500).end(error);
+        res.status(500).send(error);
       }
     } else {
       res.status(200).json([]);
     }
   } else {
     res.setHeader("Allow", "POST, GET");
-    res.status(405).end("Method not allowed");
+    res.status(405).send("Method not allowed");
   }
 };
