@@ -24,10 +24,9 @@ export function Album() {
       bg="gray.800"
       borderRadius="20px"
       py="6"
-      position="relative"
     >
-      <CompleteIndicator />
-      <HStack spacing="6" position="relative">
+      <HStack spacing="6" position="relative" w="100%" justify="center">
+        <CompleteIndicator />
         <Heading as="h3" size={["md", "lg"]}>
           Meu Album
         </Heading>

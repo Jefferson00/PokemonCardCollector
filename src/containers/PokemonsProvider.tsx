@@ -123,8 +123,10 @@ export function PokemonsProvider({ children }: PokemonsProviderProps) {
 
   const handleChangeCards = (direction: "prev" | "next") => {
     if (direction === "prev" && minCards > 0) {
-      setMaxCards(maxCards - MAX_CARDS);
-      setMinCards(minCards - MAX_CARDS);
+      const newMinCards = minCards - MAX_CARDS;
+      const newMaxCards = maxCards - MAX_CARDS;
+      setMaxCards(newMaxCards < 5 ? 5 : newMaxCards);
+      setMinCards(newMinCards < 0 ? 0 : newMinCards);
     } else if (direction === "next" && maxCards < pokemonListState.length) {
       setMaxCards(maxCards + MAX_CARDS);
       setMinCards(minCards + MAX_CARDS);
