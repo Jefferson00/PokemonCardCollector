@@ -17,21 +17,23 @@ const RegionButton = ({
   return (
     <Button
       position="relative"
-      w="20"
+      w={["16", "20"]}
       bg="gray.700"
       _before={{
         content: status,
         position: "absolute",
         bottom: "50%",
         transform: "translateY(50%)",
-        right: "-25%",
-        w: "38%",
+        right: ["85%", "-25%"],
+        w: ["45%", "38%"],
         h: `50%`,
         bg: "orange.600",
         opacity: 1,
-        fontSize: "0.85rem",
+        fontSize: ["0.75rem", "0.85rem"],
         borderRadius: "4px",
-        textAlign: "center",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
       _after={{
         content: afterContent,
@@ -56,7 +58,11 @@ const RegionButton = ({
       }}
       {...rest}
     >
-      <Text textTransform="capitalize" zIndex={2}>
+      <Text
+        textTransform="capitalize"
+        zIndex={2}
+        fontSize={["0.85rem", "1rem"]}
+      >
         {title}
       </Text>
     </Button>
@@ -64,16 +70,19 @@ const RegionButton = ({
 };
 
 export function RegionSelector() {
-  const { handleSelectRegion, min, albumState } = useAlbum();
+  const { handleSelectRegion, min, albumState, max } = useAlbum();
 
   const verifyRegionActive = useCallback(
     (interval: { start: number; end: number }) => {
-      if (min + 1 >= interval.start && min + 1 <= interval.end) {
+      if (
+        (min + 1 >= interval.start && min + 1 <= interval.end) ||
+        (interval.start >= min + 1 && interval.start <= max)
+      ) {
         return true;
       }
       return false;
     },
-    [min]
+    [min, max]
   );
 
   const verifyRegionCompleteStatus = useCallback(
@@ -89,7 +98,13 @@ export function RegionSelector() {
   );
 
   return (
-    <Flex gap={["8", "10"]} mt="6" flexWrap="wrap" justify="center">
+    <Flex
+      gap={["6", "10"]}
+      mt={["2", "6"]}
+      flexWrap="wrap"
+      justify="center"
+      p={["4", "0"]}
+    >
       <RegionButton
         afterContent="'1 ao 151'"
         title="kanto"

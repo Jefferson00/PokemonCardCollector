@@ -10,6 +10,7 @@ interface AlbumContextData {
   albumCompleteStatus: number;
   refs: MutableRefObject<any[]>;
   handleChangePage: (direction: "prev" | "next") => void;
+  handleSelectPage: (min: number, max: number) => void;
   handleSelectRegion: (region: string) => void;
   handleStopDrag: (
     ui: DraggableData,

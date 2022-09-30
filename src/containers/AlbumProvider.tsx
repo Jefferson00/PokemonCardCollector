@@ -43,9 +43,18 @@ export function AlbumProvider({ children }: AlbumProviderProps) {
   };
 
   const handleSelectRegion = (region: string) => {
-    setMin(getRegionPokedex(region));
-    setMax(getRegionPokedex(region) + 10);
-    setPage(Math.floor(getRegionPokedex(region) / 10) + 1);
+    const regionMin = getRegionPokedex(region);
+    const rest = regionMin % 10;
+    const actualMin = regionMin - rest;
+    setMin(actualMin);
+    setMax(actualMin + 10);
+    setPage(Math.floor(actualMin / 10) + 1);
+  };
+
+  const handleSelectPage = (min: number, max: number) => {
+    setMin(min);
+    setMax(max);
+    setPage(Math.floor(min / 10) + 1);
   };
 
   const updatePokemonOnDB = async (pokemon: IPokemon, on_album: boolean) => {
@@ -121,6 +130,7 @@ export function AlbumProvider({ children }: AlbumProviderProps) {
         handleChangePage,
         handleStopDrag,
         handleSelectRegion,
+        handleSelectPage,
       }}
     >
       {children}

@@ -1,10 +1,21 @@
-import { Flex, Heading, HStack, Text } from "@chakra-ui/react";
+import {
+  Flex,
+  Heading,
+  HStack,
+  Text,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import { CompleteIndicator } from "./CompleteIndicator";
 import { List } from "./List";
 import { Pagination } from "./Pagination";
 import { RegionSelector } from "./RegionSelector";
 
 export function Album() {
+  const isMobile = useBreakpointValue({
+    base: true,
+    lg: false,
+  });
+
   return (
     <Flex
       flexDir="column"
@@ -13,17 +24,18 @@ export function Album() {
       bg="gray.800"
       borderRadius="20px"
       py="6"
+      position="relative"
     >
-      <HStack spacing="6">
-        <Heading as="h3" size="lg">
+      <CompleteIndicator />
+      <HStack spacing="6" position="relative">
+        <Heading as="h3" size={["md", "lg"]}>
           Meu Album
         </Heading>
-
-        <CompleteIndicator />
       </HStack>
       <Pagination />
+      {isMobile && <RegionSelector />}
       <List />
-      <RegionSelector />
+      {!isMobile && <RegionSelector />}
     </Flex>
   );
 }

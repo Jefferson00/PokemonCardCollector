@@ -5,9 +5,10 @@ export function CompleteIndicator() {
   const { albumCompleteStatus } = useAlbum();
 
   return (
-    <Box w="14" position="relative">
+    <Box w="14" position="absolute" right="5%" top={["5px", "5%"]}>
       <Progress
         colorScheme="orange"
+        bgColor="gray.600"
         hasStripe
         value={albumCompleteStatus}
         isAnimated
@@ -15,14 +16,7 @@ export function CompleteIndicator() {
         borderRadius="50%"
       />
       <AbsoluteCenter>
-        <Text
-          as="strong"
-          style={{
-            WebkitTextStrokeWidth: 0.5,
-            WebkitTextStrokeColor: "#000",
-          }}
-          fontSize="xl"
-        >
+        <Text as="strong" fontSize={["lg", '"xl"']}>
           {albumCompleteStatus}%
         </Text>
       </AbsoluteCenter>
