@@ -3,12 +3,8 @@ export interface IPokemon {
   name: string;
   types: ITypes[];
   sprites: {
-    other: {
-      home: {
-        front_default: string;
-        front_shiny: string;
-      };
-    };
+    front_default: string;
+    front_shiny: string;
   };
   stats: IStats[];
   is_shiny?: boolean;
@@ -19,16 +15,12 @@ export interface IPokemon {
 }
 
 export interface ITypes {
-  type: {
-    name: string;
-  };
+  name: string;
 }
 
 export interface IStats {
   base_stat: number;
-  stat: {
-    name: string;
-  };
+  name: string;
 }
 
 export interface IAlbum {

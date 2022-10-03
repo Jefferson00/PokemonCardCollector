@@ -18,9 +18,7 @@ interface BackPartProps {
 
 export function BackPart({ sprite, types, stats }: BackPartProps) {
   const getPokeStat = (statName: string) => {
-    const baseState = stats.find(
-      (stat) => stat.stat.name === statName
-    )?.base_stat;
+    const baseState = stats.find((stat) => stat.name === statName)?.base_stat;
 
     return baseState || 0;
   };
@@ -36,8 +34,8 @@ export function BackPart({ sprite, types, stats }: BackPartProps) {
                 <Image
                   w="9"
                   h="9"
-                  src={`/assets/type_icons/TYPE_${type.type.name.toUpperCase()}.png`}
-                  alt={type.type.name.toUpperCase()}
+                  src={`/assets/type_icons/TYPE_${type.name.toUpperCase()}.png`}
+                  alt={type.name.toUpperCase()}
                   draggable={false}
                   key={index}
                 />

@@ -1,7 +1,7 @@
 import api from "../services/api";
 import { ReactNode, useEffect, useState } from "react";
 import { PokemonsContext } from "../context/Pokemons";
-import { IAlbum, ICard, IPokemon } from "../utils/interfaces";
+import { IAlbum, ICard, IPokemon, IStats, ITypes } from "../utils/interfaces";
 import { addMinutes, isAfter, isBefore } from "date-fns";
 import axios, { AxiosResponse } from "axios";
 import { useSession } from "next-auth/react";
@@ -57,11 +57,42 @@ export function PokemonsProvider({ children }: PokemonsProviderProps) {
     if (shinyRate === 1) is_shiny = true;
     const { data } = await api.get(`pokemon/${randomId}`);
 
-    return {
-      ...data,
+    const stats: IStats[] = [];
+
+    data.stats.map((stat: any) => {
+      if (
+        stat.stat.name !== "special-attack" &&
+        stat.stat.name !== "special-defense"
+      ) {
+        stats.push({
+          base_stat: stat.base_stat,
+          name: stat.stat.name,
+        });
+      }
+    });
+
+    const types: ITypes[] = [];
+
+    data.types.map((type: any) => {
+      types.push({
+        name: type.type.name,
+      });
+    });
+
+    const pokemon: IPokemon = {
+      id: data.id,
+      name: data.name,
+      types,
+      sprites: {
+        front_default: data.sprites.other.home.front_default,
+        front_shiny: data.sprites.other.home.front_shiny,
+      },
+      stats,
       unique_id: uuidv4(),
       is_shiny,
     };
+
+    return pokemon;
   };
 
   const getPokemonOnDB = async () => {
@@ -236,6 +267,10 @@ export function PokemonsProvider({ children }: PokemonsProviderProps) {
   };
 
   useEffect(() => {
+    getPokemonOnDB();
+  }, []);
+
+  useEffect(() => {
     getLastTimeOpen();
   }, []);
 
@@ -254,10 +289,6 @@ export function PokemonsProvider({ children }: PokemonsProviderProps) {
       };
     }
   }, [timeleft, nextTimeToOpenPackage, packageAvailable, currentDate]);
-
-  useEffect(() => {
-    getPokemonOnDB();
-  }, []);
 
   useEffect(() => {
     setMaxCards(MAX_CARDS);

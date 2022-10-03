@@ -29,9 +29,9 @@ export default function Card({ pokemon, onAlbum = false }: CardProps) {
 
   const getSprite = () => {
     if (pokemon.is_shiny) {
-      return pokemon.sprites.other.home.front_shiny;
+      return pokemon.sprites.front_shiny;
     } else {
-      return pokemon.sprites.other.home.front_default;
+      return pokemon.sprites.front_default;
     }
   };
 
@@ -40,20 +40,20 @@ export default function Card({ pokemon, onAlbum = false }: CardProps) {
       onDoubleClick={() =>
         setCardState((prevState) => (prevState === "front" ? "back" : "front"))
       }
-      typeName={pokemon.types[0].type.name}
+      typeName={pokemon.types[0].name}
       isShine={pokemon.is_shiny}
       isNew={pokemon.is_new}
     >
       {isRepeated && !onAlbum && <Header pokemon={pokemon} />}
       <TypeBackground
         position="top"
-        typeName={pokemon.types[0].type.name}
+        typeName={pokemon.types[0].name}
         isDoubleType={isDoubleType}
       />
       {pokemon.types[1] && (
         <TypeBackground
           position="bottom"
-          typeName={pokemon.types[1].type.name}
+          typeName={pokemon.types[1].name}
           isDoubleType={isDoubleType}
         />
       )}
