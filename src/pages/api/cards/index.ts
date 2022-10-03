@@ -29,6 +29,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           .toArray();
         res.status(200).json(cards);
       } catch (error) {
+        console.error(error);
         res.status(500).send(error);
       }
     } else {
