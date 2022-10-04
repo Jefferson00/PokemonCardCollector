@@ -29,10 +29,17 @@ export default Homepage;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession(ctx);
-
-  console.log(session);
+  const error = ctx.query?.error;
 
   if (!session?.user) {
+    if (error) {
+      return {
+        redirect: {
+          destination: `/?error=${error}`,
+          permanent: false,
+        },
+      };
+    }
     return {
       redirect: {
         destination: "/",

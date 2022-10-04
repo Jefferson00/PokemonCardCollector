@@ -1,12 +1,26 @@
-import { Button, Flex, Image, Stack } from "@chakra-ui/react";
+import {
+  AbsoluteCenter,
+  Button,
+  Center,
+  Divider,
+  Flex,
+  Icon,
+  Image,
+  Stack,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "../components/Form/input";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { getSession, signIn } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MagicLinkModal } from "../components/MagicLinkModal";
 import { GetServerSideProps } from "next";
+import { FaFacebook, FaGoogle } from "react-icons/fa";
+import { useRouter } from "next/router";
+import { errors } from "../utils/constants";
 
 interface SignInFormProps {
   email: string;
@@ -20,6 +34,11 @@ const signInFormSchema = yup.object().shape({
 });
 
 const Home = () => {
+  const toast = useToast();
+  const { error } = useRouter().query;
+  const [errorMessage, setErrorMessage] = useState(
+    error && (errors[String(error)] ?? errors.default)
+  );
   const [isSendingMail, setIsSendingMail] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [email, setEmail] = useState("");
@@ -46,12 +65,24 @@ const Home = () => {
   };
 
   const handleSignInWithFacebook = async () => {
-    try {
-      await signIn("facebook");
-    } catch (error) {
-      alert(error);
-    }
+    await signIn("facebook");
   };
+
+  const handleSignInWithGoogle = async () => {
+    await signIn("google");
+  };
+
+  useEffect(() => {
+    if (errorMessage) {
+      toast({
+        title: "Erro no Login",
+        description: errorMessage as String,
+        status: "error",
+        isClosable: true,
+        position: "top",
+      });
+    }
+  }, [errorMessage, toast]);
 
   return (
     <>
@@ -97,15 +128,32 @@ const Home = () => {
           >
             Entrar
           </Button>
+          <Center position="relative">
+            <Divider my="6" />
+            <AbsoluteCenter bg="gray.800" px="2">
+              <Text fontSize="xs">Ou</Text>
+            </AbsoluteCenter>
+          </Center>
           <Button
             type="button"
-            mt="6"
             colorScheme="blue"
             size="md"
-            isLoading={isSendingMail}
+            disabled={isSendingMail}
             onClick={handleSignInWithFacebook}
+            rightIcon={<Icon as={FaFacebook} />}
           >
             Entrar com Facebook
+          </Button>
+          <Button
+            type="button"
+            colorScheme="red"
+            mt="6"
+            size="md"
+            disabled={isSendingMail}
+            onClick={handleSignInWithGoogle}
+            rightIcon={<Icon as={FaGoogle} />}
+          >
+            Entrar com Google
           </Button>
         </Flex>
       </Flex>
