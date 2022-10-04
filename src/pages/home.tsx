@@ -30,6 +30,8 @@ export default Homepage;
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession(ctx);
 
+  console.log(session);
+
   if (!session?.user) {
     return {
       redirect: {

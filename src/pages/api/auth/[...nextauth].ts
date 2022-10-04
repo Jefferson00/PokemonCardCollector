@@ -1,6 +1,7 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import { FaunaAdapter } from "@next-auth/fauna-adapter";
 import EmailProvider from "next-auth/providers/email";
+import FacebookProvider from "next-auth/providers/facebook";
 import { fauna } from "../../../services/fauna";
 
 export const authOptions: NextAuthOptions = {
@@ -16,6 +17,10 @@ export const authOptions: NextAuthOptions = {
       },
       from: process.env.EMAIL_FROM,
       maxAge: 1 * 60 * 60,
+    }),
+    FacebookProvider({
+      clientId: process.env.FACEBOOK_ID || "",
+      clientSecret: process.env.FACEBOOK_SECRET || "",
     }),
   ],
   adapter: FaunaAdapter(fauna),

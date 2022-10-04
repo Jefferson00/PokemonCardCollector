@@ -45,6 +45,14 @@ const Home = () => {
     }
   };
 
+  const handleSignInWithFacebook = async () => {
+    try {
+      await signIn("facebook");
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   return (
     <>
       <Flex
@@ -88,6 +96,16 @@ const Home = () => {
             isLoading={isSendingMail}
           >
             Entrar
+          </Button>
+          <Button
+            type="button"
+            mt="6"
+            colorScheme="blue"
+            size="md"
+            isLoading={isSendingMail}
+            onClick={handleSignInWithFacebook}
+          >
+            Entrar com Facebook
           </Button>
         </Flex>
       </Flex>
