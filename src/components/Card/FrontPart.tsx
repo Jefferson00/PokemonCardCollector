@@ -3,6 +3,7 @@ import {
   Box,
   Flex,
   Image,
+  ScaleFade,
   SlideFade,
   Spinner,
 } from "@chakra-ui/react";
@@ -25,7 +26,7 @@ export function FrontPart({ sprite, isShiny }: FrontPartProps) {
             <Spinner alignSelf="center" />
           </Flex>
         )}
-        <SlideFade in={true} offsetX="-200px">
+        <ScaleFade in={true} initialScale={0} delay={0.2}>
           <Image
             onLoad={() => setIsImageLoaded(true)}
             maxW="100%"
@@ -39,7 +40,7 @@ export function FrontPart({ sprite, isShiny }: FrontPartProps) {
                 : "drop-shadow(2px 2px 1px #000)"
             }
           />
-        </SlideFade>
+        </ScaleFade>
         {isShiny && <StarShine />}
       </Box>
     </AbsoluteCenter>

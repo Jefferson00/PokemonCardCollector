@@ -65,7 +65,7 @@ export function CardsList() {
       bg="gray.800"
       borderRadius="20px"
       p="4"
-      gap="8"
+      gap="6"
     >
       {!loading && pokemonListState.length > 0 && (
         <HStack>

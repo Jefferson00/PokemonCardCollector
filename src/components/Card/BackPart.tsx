@@ -4,6 +4,7 @@ import {
   Flex,
   HStack,
   Image,
+  ScaleFade,
   SlideFade,
   Stack,
 } from "@chakra-ui/react";
@@ -25,7 +26,7 @@ export function BackPart({ sprite, types, stats }: BackPartProps) {
 
   return (
     <Box position="absolute" top={0} w="90%">
-      <SlideFade in={true} offsetX="200px">
+      <ScaleFade in={true} initialScale={0} delay={0.2}>
         <Flex w="90%" alignItems="flex-end" justifyContent="space-between">
           <Image w="16" h="16" src={sprite} alt="pokemon" draggable={false} />
           <Flex alignItems="center">
@@ -52,7 +53,7 @@ export function BackPart({ sprite, types, stats }: BackPartProps) {
             <StatBox title="hp" baseStat={getPokeStat("hp")} />
           </Stack>
         </Flex>
-      </SlideFade>
+      </ScaleFade>
     </Box>
   );
 }
