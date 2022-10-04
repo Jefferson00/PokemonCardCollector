@@ -15,6 +15,7 @@ import { useAlbum } from "../../hooks/useAlbum";
 import { usePokemons } from "../../hooks/usePokemons";
 import { ArrowButton } from "../ArrowButton";
 import Card from "../Card";
+import { Empty } from "./Empty";
 
 export function CardsList() {
   const {
@@ -125,19 +126,7 @@ export function CardsList() {
         </Stack>
       )}
 
-      {pokemonListState.length === 0 && !loading && (
-        <Flex
-          align="center"
-          justify="center"
-          bg="gray.600"
-          w="64"
-          h="32"
-          alignSelf="center"
-          borderRadius="8px"
-        >
-          <Text as="h2">Sem cards por enquanto</Text>
-        </Flex>
-      )}
+      {pokemonListState.length === 0 && !loading && <Empty />}
 
       {loading && <HStack>{getLoadingSkeleton()}</HStack>}
     </Flex>
