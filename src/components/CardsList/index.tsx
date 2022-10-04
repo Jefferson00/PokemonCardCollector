@@ -16,6 +16,7 @@ import { usePokemons } from "../../hooks/usePokemons";
 import { ArrowButton } from "../ArrowButton";
 import Card from "../Card";
 import { Empty } from "./Empty";
+import { OptionList } from "./OptionsList";
 
 export function CardsList() {
   const {
@@ -100,31 +101,7 @@ export function CardsList() {
         </HStack>
       )}
 
-      {pokemonListState.length > 0 && !loading && (
-        <Stack direction={["row", "column"]} justify={["center", "flex-start"]}>
-          <Tooltip label="Organizar" placement="top">
-            <Button
-              bg="orange.400"
-              _hover={{ bg: "orange.600" }}
-              onClick={() => handleSortCards()}
-            >
-              <Icon as={FiLayers} />
-            </Button>
-          </Tooltip>
-          {pokemonListState.length >= 5 && (
-            <Tooltip label="Solicitar troca" placement="top">
-              <Button
-                disabled={repeatedCards.length < 5}
-                bg="orange.400"
-                _hover={{ bg: "orange.600" }}
-                onClick={() => handleTradeCard()}
-              >
-                <Icon as={FiRepeat} />
-              </Button>
-            </Tooltip>
-          )}
-        </Stack>
-      )}
+      {pokemonListState.length > 0 && !loading && <OptionList />}
 
       {pokemonListState.length === 0 && !loading && <Empty />}
 
