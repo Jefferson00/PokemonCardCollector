@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { DraggableData } from "react-draggable";
 import { AlbumContext } from "../context/Album";
 import { usePokemons } from "../hooks/usePokemons";
@@ -30,82 +30,84 @@ export function AlbumProvider({ children }: AlbumProviderProps) {
     return ((value1 - value2) / ((value1 + value2) / 2)) * 100;
   };
 
-  const handleChangePage = (direction: "prev" | "next") => {
-    if (direction === "prev" && page > 1) {
-      setPage(page - 1);
-      setMax(max - 10);
-      setMin(min - 10);
-    } else if (direction === "next" && max < albumState.length) {
-      setPage(page + 1);
-      setMax(max + 10);
-      setMin(min + 10);
-    }
-  };
-
-  const handleSelectRegion = (region: string) => {
-    const regionMin = getRegionPokedex(region);
-    const rest = regionMin % 10;
-    const actualMin = regionMin - rest;
-    setMin(actualMin);
-    setMax(actualMin + 10);
-    setPage(Math.floor(actualMin / 10) + 1);
-  };
-
-  const handleSelectPage = (min: number, max: number) => {
-    setMin(min);
-    setMax(max);
-    setPage(Math.floor(min / 10) + 1);
-  };
-
   const updatePokemonOnDB = async (pokemon: IPokemon, on_album: boolean) => {
     await axios.put(`/api/cards/${pokemon._id}`, {
       on_album,
     });
   };
 
-  const handleStopDrag = async (
-    ui: DraggableData,
-    pokemonId: number,
-    uniqueId: string
-  ) => {
-    const cardXPosition = ui.node.offsetLeft + ui.lastX;
-    const cardYPosition = ui.node.offsetTop + ui.lastY;
-    const albumXPosition = refs.current[pokemonId - 1]?.current?.offsetLeft;
-    const albumYPosition = refs.current[pokemonId - 1]?.current?.offsetTop;
+  const handleChangePage = useCallback(
+    (direction: "prev" | "next") => {
+      if (direction === "prev" && page > 1) {
+        setPage(page - 1);
+        setMax(max - 10);
+        setMin(min - 10);
+      } else if (direction === "next" && max < albumState.length) {
+        setPage(page + 1);
+        setMax(max + 10);
+        setMin(min + 10);
+      }
+    },
+    [albumState.length, max, min, page]
+  );
 
-    if (
-      positionAccuracy(cardXPosition, albumXPosition) < 2 &&
-      positionAccuracy(cardXPosition, albumXPosition) > -2 &&
-      positionAccuracy(cardYPosition, albumYPosition) < 2 &&
-      positionAccuracy(cardYPosition, albumYPosition) > -2
-    ) {
-      const poke =
-        pokemonListState.find((p) => p.unique_id === uniqueId) || null;
+  const handleSelectRegion = useCallback((region: string) => {
+    const regionMin = getRegionPokedex(region);
+    const rest = regionMin % 10;
+    const actualMin = regionMin - rest;
+    setMin(actualMin);
+    setMax(actualMin + 10);
+    setPage(Math.floor(actualMin / 10) + 1);
+  }, []);
 
-      let pokemonToRemoveFromAlbum = null;
+  const handleSelectPage = useCallback((min: number, max: number) => {
+    setMin(min);
+    setMax(max);
+    setPage(Math.floor(min / 10) + 1);
+  }, []);
 
-      setAlbumState((prevState) =>
-        prevState.map((state) => {
-          if (state.id === pokemonId) {
-            if (state.pokemon) {
-              pokemonToRemoveFromAlbum = state.pokemon;
+  const handleStopDrag = useCallback(
+    async (ui: DraggableData, pokemonId: number, uniqueId: string) => {
+      const cardXPosition = ui.node.offsetLeft + ui.lastX;
+      const cardYPosition = ui.node.offsetTop + ui.lastY;
+      const albumXPosition = refs.current[pokemonId - 1]?.current?.offsetLeft;
+      const albumYPosition = refs.current[pokemonId - 1]?.current?.offsetTop;
+
+      if (
+        positionAccuracy(cardXPosition, albumXPosition) < 2 &&
+        positionAccuracy(cardXPosition, albumXPosition) > -2 &&
+        positionAccuracy(cardYPosition, albumYPosition) < 2 &&
+        positionAccuracy(cardYPosition, albumYPosition) > -2
+      ) {
+        const poke =
+          pokemonListState.find((p) => p.unique_id === uniqueId) || null;
+
+        let pokemonToRemoveFromAlbum = null;
+
+        setAlbumState((prevState) =>
+          prevState.map((state) => {
+            if (state.id === pokemonId) {
+              if (state.pokemon) {
+                pokemonToRemoveFromAlbum = state.pokemon;
+              }
+              return { ...state, pokemon: poke };
             }
-            return { ...state, pokemon: poke };
-          }
-          return state;
-        })
-      );
+            return state;
+          })
+        );
 
-      if (pokemonToRemoveFromAlbum) {
-        updatePokemonList("add", pokemonToRemoveFromAlbum);
-        await updatePokemonOnDB(pokemonToRemoveFromAlbum, false);
+        if (pokemonToRemoveFromAlbum) {
+          updatePokemonList("add", pokemonToRemoveFromAlbum);
+          await updatePokemonOnDB(pokemonToRemoveFromAlbum, false);
+        }
+        if (poke) {
+          updatePokemonList("delete", poke);
+          await updatePokemonOnDB(poke, true);
+        }
       }
-      if (poke) {
-        updatePokemonList("delete", poke);
-        await updatePokemonOnDB(poke, true);
-      }
-    }
-  };
+    },
+    [pokemonListState, updatePokemonList]
+  );
 
   useEffect(() => {
     const pokesFind = albumState.filter((a) => a.pokemon !== null);

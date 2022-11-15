@@ -9,6 +9,7 @@ import "../styles/globals.css";
 import { theme } from "../styles/theme";
 import { SidebarDrawerProvider } from "../containers/SidebarDrawerProvider";
 import Head from "next/head";
+import { AchievementsProvider } from "../containers/AchievementsProvider";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -17,10 +18,12 @@ function MyApp({ Component, pageProps }: AppProps) {
         <SidebarDrawerProvider>
           <PokemonsProvider>
             <AlbumProvider>
-              <Head>
-                <title>Pokémon Card Collector</title>
-              </Head>
-              <Component {...pageProps} />
+              <AchievementsProvider>
+                <Head>
+                  <title>Pokémon Card Collector</title>
+                </Head>
+                <Component {...pageProps} />
+              </AchievementsProvider>
             </AlbumProvider>
           </PokemonsProvider>
         </SidebarDrawerProvider>

@@ -27,9 +27,9 @@ export function Album() {
     >
       <HStack spacing="6" position="relative" w="100%" justify="center">
         <CompleteIndicator />
-        <Heading as="h3" size={["md", "lg"]}>
+        {/*    <Heading as="h3" size={["md", "lg"]}>
           Meu Album
-        </Heading>
+        </Heading> */}
       </HStack>
       <Pagination />
       {isMobile && <RegionSelector />}

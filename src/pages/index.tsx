@@ -36,7 +36,7 @@ const signInFormSchema = yup.object().shape({
 const Home = () => {
   const toast = useToast();
   const { error } = useRouter().query;
-  const [errorMessage, setErrorMessage] = useState(
+  const [errorMessage] = useState(
     error && (errors[String(error)] ?? errors.default)
   );
   const [isSendingMail, setIsSendingMail] = useState(false);
@@ -89,72 +89,86 @@ const Home = () => {
       <Flex
         align="center"
         justify="center"
-        w="100vw"
+        maxW={1240}
         h="100vh"
-        flexDir="column"
         gap="4"
         p="6"
+        mx="auto"
+        my={0}
       >
-        <Image
-          src="/assets/poke-logo-2.svg"
-          alt="pokemon card collector"
-          w="96"
-        />
-
-        <Flex
-          as="form"
-          w="100%"
-          maxW={400}
-          bg="gray.800"
-          p="6"
-          borderRadius={8}
-          flexDir="column"
-          onSubmit={handleSubmit(handleSignIn)}
-        >
-          <Stack spacing="4">
-            <Input
-              label="E-mail"
-              type="email"
-              error={formState.errors.email}
-              {...register("email")}
-            />
+        <Flex flex={1} flexDir="column" gap={8}>
+          <Stack spacing={4} maxW={460}>
+            <Text fontSize={20} fontWeight="bold">
+              Temos que pegar!
+            </Text>
+            <Text fontSize={36} fontWeight="bold">
+              Colecione seus pokémon favoritos em cards incriveis
+            </Text>
           </Stack>
-          <Button
-            type="submit"
-            mt="6"
-            colorScheme="orange"
-            size="md"
-            isLoading={isSendingMail}
+          <Flex
+            as="form"
+            w="100%"
+            maxW={400}
+            bg="gray.800"
+            p="6"
+            borderRadius={8}
+            flexDir="column"
+            onSubmit={handleSubmit(handleSignIn)}
           >
-            Entrar
-          </Button>
-          <Center position="relative">
-            <Divider my="6" />
-            <AbsoluteCenter bg="gray.800" px="2">
-              <Text fontSize="xs">Ou</Text>
-            </AbsoluteCenter>
-          </Center>
-          <Button
-            type="button"
-            colorScheme="blue"
-            size="md"
-            disabled={isSendingMail}
-            onClick={handleSignInWithFacebook}
-            rightIcon={<Icon as={FaFacebook} />}
-          >
-            Entrar com Facebook
-          </Button>
-          <Button
-            type="button"
-            colorScheme="red"
-            mt="6"
-            size="md"
-            disabled={isSendingMail}
-            onClick={handleSignInWithGoogle}
-            rightIcon={<Icon as={FaGoogle} />}
-          >
-            Entrar com Google
-          </Button>
+            <Stack spacing="4">
+              <Input
+                label="E-mail"
+                type="email"
+                error={formState.errors.email}
+                {...register("email")}
+              />
+            </Stack>
+            <Button
+              type="submit"
+              mt="6"
+              colorScheme="orange"
+              size="md"
+              isLoading={isSendingMail}
+            >
+              Entrar
+            </Button>
+            <Center position="relative">
+              <Divider my="6" />
+              <AbsoluteCenter bg="gray.800" px="2">
+                <Text fontSize="xs">Ou</Text>
+              </AbsoluteCenter>
+            </Center>
+            <Button
+              type="button"
+              colorScheme="blue"
+              size="md"
+              disabled={isSendingMail}
+              onClick={handleSignInWithFacebook}
+              rightIcon={<Icon as={FaFacebook} />}
+            >
+              Entrar com Facebook
+            </Button>
+            <Button
+              type="button"
+              colorScheme="red"
+              mt="6"
+              size="md"
+              disabled={isSendingMail}
+              onClick={handleSignInWithGoogle}
+              rightIcon={<Icon as={FaGoogle} />}
+            >
+              Entrar com Google
+            </Button>
+          </Flex>
+        </Flex>
+
+        <Flex flexDir="column" align="center" flex={1} gap={8}>
+          <Image
+            src="/assets/poke-logo-2.svg"
+            alt="pokemon card collector"
+            w="64"
+          />
+          <Image src="/assets/cards.svg" alt="cards" />
         </Flex>
       </Flex>
       <MagicLinkModal

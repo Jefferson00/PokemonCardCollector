@@ -29,7 +29,7 @@ export const MagicLinkModal = ({
         <ModalCloseButton />
         <ModalBody>
           <Text textAlign="center">
-            Te enviamos um e-amil para <strong>{email}</strong>. Verifique sua
+            Te enviamos um email para <strong>{email}</strong>. Verifique sua
             caixa de entrada e clique no link para realizar o login.
           </Text>
         </ModalBody>
