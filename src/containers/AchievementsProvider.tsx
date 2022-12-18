@@ -43,6 +43,49 @@ export function AchievementsProvider({ children }: AchievementsProviderProps) {
 
   const [achievements, setAchievements] = useState<AchievementProps[]>([]);
 
+  const getRegionsAchievement = useCallback(() => {
+    let achievementsType: AchievementProps[] = [];
+
+    regionsParam.map((region) => {
+      const pokemonByRegion = albumState.slice(region.start, region.ends);
+
+      const param = achievementParams.find(
+        (ach) => ach.achievement === region.name
+      );
+      if (param) {
+        let level = "default";
+        let max = 0;
+        const pokemonQtd = pokemonByRegion.length;
+
+        const perc = (pokemonQtd * 100) / param.maxValue;
+        max = (param.maxValue * 40) / 100;
+
+        if (pokemonQtd >= param.maxValue) {
+          level = "gold";
+          max = param.maxValue;
+        } else if (perc > 80 && perc <= 100) {
+          level = "silver";
+          max = param.maxValue;
+        } else if (perc >= 40 && perc <= 80) {
+          level = "bronze";
+          max = (param.maxValue * 80) / 100;
+        }
+
+        achievementsType.push({
+          achievement: region.name,
+          level,
+          title: region.name,
+          levelValue: pokemonQtd,
+          tooltip: `${pokemonQtd} de ${param?.maxValue}`,
+          min: 0,
+          max,
+        });
+      }
+    });
+
+    return achievementsType;
+  }, [albumState]);
+
   const getAchievements = useCallback(
     <T extends unknown>(options: IGetAchievementsOptions<T>) => {
       const { arrayParams, filterFn, filterOption } = options;
@@ -95,7 +138,8 @@ export function AchievementsProvider({ children }: AchievementsProviderProps) {
     await new Promise((resolve) => {
       const achievementRegionOptions: IGetAchievementsOptions<IRegionsParam> = {
         arrayParams: regionsParam,
-        filterFn: (a) => albumState.slice(a.start, a.ends),
+        filterFn: (a) =>
+          albumState.slice(a.start, a.ends).filter((p) => p.pokemon),
         filterOption: (a) => a.name,
       };
       const achievementStatsOptions: IGetAchievementsOptions<string> = {
@@ -143,7 +187,7 @@ export function AchievementsProvider({ children }: AchievementsProviderProps) {
       };
       const achievementCollectorOptions: IGetAchievementsOptions<string> = {
         arrayParams: ["collector"],
-        filterFn: () => albumState,
+        filterFn: () => albumState.filter((p) => p.pokemon),
         filterOption: (a) => a,
       };
 
