@@ -1,5 +1,6 @@
-import { Image, Progress, Text, Tooltip, VStack } from "@chakra-ui/react";
+import { Box, Image, Progress, Text, Tooltip, VStack } from "@chakra-ui/react";
 import { AchievementProps } from "../../../containers/AchievementsProvider";
+import { StarShine } from "../../Card/StarShine";
 
 export function Item({
   achievement,
@@ -21,16 +22,18 @@ export function Item({
           alt={title}
         />
       </Tooltip>
-      <Progress
-        max={max}
-        min={min}
-        value={levelValue}
-        w="full"
-        size="xs"
-        colorScheme="orange"
-        rounded="base"
-        bg="gray.600"
-      />
+      {levelValue < max && (
+        <Progress
+          max={max}
+          min={min}
+          value={levelValue}
+          w="full"
+          size="xs"
+          colorScheme="orange"
+          rounded="base"
+          bg="gray.600"
+        />
+      )}
     </VStack>
   );
 }

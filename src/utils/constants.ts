@@ -46,341 +46,117 @@ export const pokemonTypes = [
   "water",
 ];
 
-export const regions = [
-  "kanto",
-  "johto",
-  "hoenn",
-  "sinnoh",
-  "unova",
-  "kalos",
-  "alola",
-  "galar",
-];
-
-export const achievementsParams = [
-  {
-    bug: {
-      40: "bronze",
-      64: "silver",
-      gold: 96,
-    },
-  },
-  {
-    dark: {
-      bronze: 32,
-      silver: 60,
-      gold: 80,
-    },
-  },
-  {
-    dragon: {
-      bronze: 30,
-      silver: 65,
-      gold: 83,
-    },
-  },
-  {
-    electric: {
-      bronze: 38,
-      silver: 75,
-      gold: 94,
-    },
-  },
-  {
-    fairy: {
-      bronze: 30,
-      silver: 58,
-      gold: 73,
-    },
-  },
-  {
-    fighting: {
-      bronze: 32,
-      silver: 60,
-      gold: 81,
-    },
-  },
-  {
-    fire: {
-      bronze: 36,
-      silver: 65,
-      gold: 91,
-    },
-  },
-  {
-    flying: {
-      bronze: 55,
-      silver: 110,
-      gold: 139,
-    },
-  },
-  {
-    ghost: {
-      bronze: 30,
-      silver: 61,
-      gold: 77,
-    },
-  },
-  {
-    grass: {
-      bronze: 51,
-      silver: 103,
-      gold: 129,
-    },
-  },
-  {
-    ground: {
-      bronze: 33,
-      silver: 65,
-      gold: 83,
-    },
-  },
-  {
-    ice: {
-      bronze: 23,
-      silver: 45,
-      gold: 59,
-    },
-  },
-  {
-    normal: {
-      bronze: 53,
-      silver: 106,
-      gold: 133,
-    },
-  },
-  {
-    poison: {
-      bronze: 34,
-      silver: 65,
-      gold: 87,
-    },
-  },
-  {
-    psychic: {
-      bronze: 50,
-      silver: 99,
-      gold: 124,
-    },
-  },
-  {
-    rock: {
-      bronze: 36,
-      silver: 65,
-      gold: 92,
-    },
-  },
-  {
-    steel: {
-      bronze: 32,
-      silver: 64,
-      gold: 80,
-    },
-  },
-  {
-    water: {
-      bronze: 65,
-      silver: 134,
-      gold: 168,
-    },
-  },
-  {
-    shine: {
-      bronze: 40,
-      silver: 90,
-      gold: 190,
-    },
-  },
-  {
-    legendary: {
-      bronze: 23,
-      silver: 45,
-      gold: 59,
-    },
-  },
-  {
-    mitic: {
-      bronze: 8,
-      silver: 15,
-      gold: 22,
-    },
-  },
-  {
-    atack: {
-      bronze: 72,
-      silver: 144,
-      gold: 180,
-    },
-  },
-  {
-    defense: {
-      bronze: 46,
-      silver: 92,
-      gold: 115,
-    },
-  },
-  {
-    hp: {
-      bronze: 26,
-      silver: 52,
-      gold: 65,
-    },
-  },
-  {
-    speed: {
-      bronze: 40,
-      silver: 80,
-      gold: 100,
-    },
-  },
-  {
-    ultra: {
-      bronze: 5,
-      silver: 8,
-      gold: 11,
-    },
-  },
-  {
-    kanto: {
-      bronze: 60,
-      silver: 120,
-      gold: 151,
-    },
-  },
-  {
-    johto: {
-      bronze: 40,
-      silver: 80,
-      gold: 100,
-    },
-  },
-  {
-    hoenn: {
-      bronze: 54,
-      silver: 108,
-      gold: 135,
-    },
-  },
-  {
-    sinnoh: {
-      bronze: 45,
-      silver: 85,
-      gold: 107,
-    },
-  },
-  {
-    unova: {
-      bronze: 62,
-      silver: 124,
-      gold: 156,
-    },
-  },
-  {
-    kalos: {
-      bronze: 28,
-      silver: 57,
-      gold: 72,
-    },
-  },
-  {
-    alola: {
-      bronze: 35,
-      silver: 65,
-      gold: 88,
-    },
-  },
-  {
-    galar: {
-      bronze: 36,
-      silver: 65,
-      gold: 91,
-    },
-  },
-  {
-    collector: {
-      bronze: 360,
-      silver: 720,
-      gold: 898,
-    },
-  },
-];
+export const achievementsLocale = {
+  bug: "Inseto",
+  dark: "Sombrio",
+  dragon: "Dragão",
+  electric: "Elétrico",
+  fairy: "Fada",
+  fighting: "Lutador",
+  fire: "Fogo",
+  flying: "Voador",
+  ghost: "Fantasma",
+  grass: "Grama",
+  ground: "Terra",
+  ice: "Gelo",
+  normal: "Normal",
+  poison: "Venenoso",
+  psychic: "Psíquico",
+  rock: "Pedra",
+  steel: "Aço",
+  water: "Água",
+  shine: "Brilhante",
+  legendary: "Lendários",
+  mitic: "Mítico",
+  attack: "Atacante",
+  defense: "Defensivo",
+  hp: "HP",
+  speed: "Velocista",
+  ultra: "Ultra Beasts",
+  kanto: "Kanto",
+  johto: "Johto",
+  hoenn: "Hoenn",
+  sinnoh: "Sinnoh",
+  unova: "Unova",
+  kalos: "Kalos",
+  alola: "Alola",
+  galar: "Galar",
+  collector: "Colecionador",
+};
+export type IAchievements = keyof typeof achievementsLocale;
 
 export const achievementParams = [
   {
     achievement: "bug",
-    maxValue: 96,
+    maxValue: 84,
   },
   {
     achievement: "dark",
-    maxValue: 80,
+    maxValue: 55,
   },
   {
     achievement: "dragon",
-    maxValue: 83,
+    maxValue: 56,
   },
   {
     achievement: "electric",
-    maxValue: 94,
+    maxValue: 57,
   },
   {
     achievement: "fairy",
-    maxValue: 73,
+    maxValue: 54,
   },
   {
     achievement: "fighting",
-    maxValue: 81,
+    maxValue: 61,
   },
   {
     achievement: "fire",
-    maxValue: 91,
+    maxValue: 71,
   },
   {
     achievement: "flying",
-    maxValue: 139,
+    maxValue: 102,
   },
   {
     achievement: "ghost",
-    maxValue: 77,
+    maxValue: 51,
   },
   {
     achievement: "grass",
-    maxValue: 129,
+    maxValue: 107,
   },
   {
     achievement: "ground",
-    maxValue: 83,
+    maxValue: 67,
   },
   {
     achievement: "ice",
-    maxValue: 59,
-  },
-  {
-    achievement: "ice",
-    maxValue: 59,
+    maxValue: 41,
   },
   {
     achievement: "normal",
-    maxValue: 133,
+    maxValue: 115,
   },
   {
     achievement: "poison",
-    maxValue: 87,
+    maxValue: 69,
   },
   {
     achievement: "psychic",
-    maxValue: 124,
+    maxValue: 90,
   },
   {
     achievement: "rock",
-    maxValue: 92,
+    maxValue: 65,
   },
   {
     achievement: "steel",
-    maxValue: 80,
+    maxValue: 54,
   },
   {
     achievement: "water",
-    maxValue: 168,
+    maxValue: 141,
   },
   {
     achievement: "shine",
@@ -395,20 +171,8 @@ export const achievementParams = [
     maxValue: 22,
   },
   {
-    achievement: "mitic",
-    maxValue: 22,
-  },
-  {
-    achievement: "atack",
+    achievement: "attack",
     maxValue: 180,
-  },
-  {
-    achievement: "atack",
-    maxValue: 180,
-  },
-  {
-    achievement: "defense",
-    maxValue: 115,
   },
   {
     achievement: "defense",
@@ -419,20 +183,8 @@ export const achievementParams = [
     maxValue: 65,
   },
   {
-    achievement: "hp",
-    maxValue: 65,
-  },
-  {
     achievement: "speed",
     maxValue: 100,
-  },
-  {
-    achievement: "speed",
-    maxValue: 100,
-  },
-  {
-    achievement: "ultra",
-    maxValue: 11,
   },
   {
     achievement: "ultra",
@@ -468,10 +220,73 @@ export const achievementParams = [
   },
   {
     achievement: "galar",
-    maxValue: 91,
+    maxValue: 89,
   },
   {
     achievement: "collector",
     maxValue: 898,
+  },
+];
+
+export const legendaries = [
+  144, 145, 146, 150, 243, 244, 245, 249, 250, 377, 378, 379, 380, 381, 382,
+  383, 384, 480, 481, 482, 483, 484, 485, 486, 487, 488, 638, 639, 640, 641,
+  642, 643, 644, 645, 646, 716, 717, 718, 772, 773, 785, 786, 787, 788, 789,
+  790, 791, 792, 800, 888, 889, 890, 891, 892, 894, 895, 896, 897, 898,
+];
+
+export const mitics = [
+  151, 251, 385, 386, 489, 490, 491, 492, 493, 494, 647, 648, 649, 719, 720,
+  721, 801, 802, 807, 808, 809, 893,
+];
+
+export const ultraBeasts = [
+  793, 794, 795, 796, 797, 798, 799, 803, 804, 805, 806,
+];
+
+export const statsParam = ["attack", "defense", "speed", "hp"];
+
+export type IRegionsParam = typeof regionsParam[0];
+
+export const regionsParam = [
+  {
+    name: "kanto",
+    start: 0,
+    ends: 151,
+  },
+  {
+    name: "johto",
+    start: 151,
+    ends: 251,
+  },
+  {
+    name: "hoenn",
+    start: 251,
+    ends: 386,
+  },
+  {
+    name: "sinnoh",
+    start: 386,
+    ends: 493,
+  },
+  {
+    name: "unova",
+    start: 493,
+    ends: 649,
+  },
+  {
+    name: "kalos",
+    start: 649,
+    ends: 721,
+  },
+  {
+    name: "alola",
+    start: 721,
+    ends: 809,
+  },
+  {
+    name: "galar",
+    start: 809,
+    ends: 898,
   },
 ];

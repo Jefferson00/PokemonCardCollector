@@ -102,7 +102,7 @@ const Home = () => {
               Temos que pegar!
             </Text>
             <Text fontSize={36} fontWeight="bold">
-              Colecione seus pokémon favoritos em cards incriveis
+              Colecione seus pokémon favoritos em cards incríveis
             </Text>
           </Stack>
           <Flex

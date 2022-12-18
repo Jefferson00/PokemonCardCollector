@@ -1,5 +1,6 @@
 import { Stack, Text, Button, Icon, Flex, Image } from "@chakra-ui/react";
 import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/router";
 import { FaInfoCircle, FaLayerGroup, FaMedal } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import { PokeballButton } from "../PokeballButton";
@@ -7,6 +8,7 @@ import { Link } from "./Link";
 
 export function SidebarNav() {
   const { data: session } = useSession();
+  const { route } = useRouter();
 
   return (
     <Stack spacing="6" align="flex-start" justify="center" px="6" py="8">
@@ -15,13 +17,19 @@ export function SidebarNav() {
       </Flex>
 
       <Flex justify="center" w="100%">
-        <PokeballButton />
+        {route === "/home" && <PokeballButton />}
       </Flex>
 
       <Flex justify="center" w="100%" flexDir="column" gap="4">
-        <Link icon={FaLayerGroup} title="Meus Cards" link="/" />
-        <Link icon={FaMedal} title="Minhas conquistas" link="/achievements" />
-        <Link icon={FaInfoCircle} title="Sobre" link="/sobre" />
+        {route !== "/home" && (
+          <Link icon={FaLayerGroup} title="Meus Cards" link="/" />
+        )}
+        {route !== "/achievements" && (
+          <Link icon={FaMedal} title="Minhas conquistas" link="/achievements" />
+        )}
+        {route !== "/sobre" && (
+          <Link icon={FaInfoCircle} title="Sobre" link="/sobre" />
+        )}
       </Flex>
 
       <Flex

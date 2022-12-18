@@ -1,20 +1,18 @@
-import api from "../services/api";
 import { ReactNode, useCallback, useEffect, useState } from "react";
 import { PokemonsContext } from "../context/Pokemons";
-import { IAlbum, ICard, IPokemon, IStats, ITypes } from "../utils/interfaces";
+import { IAlbum, ICard, IPokemon } from "../utils/interfaces";
 import { addMinutes, isAfter, isBefore } from "date-fns";
 import axios, { AxiosResponse } from "axios";
 import { useSession } from "next-auth/react";
-import { v4 as uuidv4 } from "uuid";
 import {
   CARD_QTD_PER_PACKAGE,
   MIN_QTD_TO_TRADE,
   PACKAGE_TIMOUT,
   POKEMON_QTD,
-  SHINY_PROBABILITY,
 } from "../utils/constants";
 import { getAlbumList } from "../utils/getAlbumList";
 import { useBreakpointValue } from "@chakra-ui/react";
+import { getRandomPokemon } from "../utils/getRandomPokemon";
 
 interface PokemonsProviderProps {
   children: ReactNode;
@@ -33,9 +31,6 @@ export function PokemonsProvider({ children }: PokemonsProviderProps) {
   const currentDate = new Date().getTime();
   const [loading, setLoading] = useState(true);
   const [album, setAlbum] = useState<IAlbum[]>(getAlbumList(POKEMON_QTD));
-  const [emptySpots, setEmptySpots] = useState<IAlbum[]>(
-    getAlbumList(POKEMON_QTD)
-  );
   const [pokemonListState, setPokemonListState] = useState<IPokemon[]>([]);
   const [repeatedCards, setRepeatedCards] = useState<IPokemon[]>([]);
   const [packageAvailable, setPackageAvailable] = useState(true);
@@ -50,60 +45,6 @@ export function PokemonsProvider({ children }: PokemonsProviderProps) {
 
   const minutes = Math.floor((timeleft % (1000 * 60 * 60)) / (1000 * 60));
   const seconds = Math.floor((timeleft % (1000 * 60)) / 1000);
-
-  const handleGetRandomPokemon = async (getUnique?: boolean) => {
-    let randomId = Math.floor(Math.random() * (POKEMON_QTD - 1 + 1)) + 1;
-    if (getUnique) {
-      if (emptySpots.length > 0) {
-        const randomEmptySpot =
-          emptySpots[Math.floor(Math.random() * emptySpots.length)];
-        randomId = randomEmptySpot.id;
-      }
-    }
-    const shinyRate =
-      Math.floor(Math.random() * (SHINY_PROBABILITY - 1 + 1)) + 1;
-
-    let is_shiny = false;
-    if (shinyRate === 1) is_shiny = true;
-    const { data } = await api.get(`pokemon/${randomId}`);
-
-    const stats: IStats[] = [];
-
-    data.stats.map((stat: any) => {
-      if (
-        stat.stat.name !== "special-attack" &&
-        stat.stat.name !== "special-defense"
-      ) {
-        stats.push({
-          base_stat: stat.base_stat,
-          name: stat.stat.name,
-        });
-      }
-    });
-
-    const types: ITypes[] = [];
-
-    data.types.map((type: any) => {
-      types.push({
-        name: type.type.name,
-      });
-    });
-
-    const pokemon: IPokemon = {
-      id: data.id,
-      name: data.name,
-      types,
-      sprites: {
-        front_default: data.sprites.other.home.front_default,
-        front_shiny: data.sprites.other.home.front_shiny,
-      },
-      stats,
-      unique_id: uuidv4(),
-      is_shiny,
-    };
-
-    return pokemon;
-  };
 
   const getPokemonOnDB = async () => {
     const { data } = await axios.get("/api/cards");
@@ -129,12 +70,17 @@ export function PokemonsProvider({ children }: PokemonsProviderProps) {
   };
 
   const handleSaveManyCards = useCallback(
-    async (qtd: number, pokemonList: IPokemon[], getUnique?: boolean) => {
+    async (
+      qtd: number,
+      pokemonList: IPokemon[],
+      getUnique?: boolean,
+      emptySpots?: IAlbum[]
+    ) => {
       let count = 1;
       let pokeArray = [];
 
       while (count <= qtd) {
-        const pokemon = await handleGetRandomPokemon(getUnique);
+        const pokemon = await getRandomPokemon(getUnique, emptySpots);
         const response: AxiosResponse = await axios.post("/api/cards", {
           pokemon: {
             id: pokemon.id,
@@ -277,8 +223,7 @@ export function PokemonsProvider({ children }: PokemonsProviderProps) {
       );
       setRepeatedCards(remainingRepeatedPokemons);
 
-      const emptys = album.filter((a) => a.pokemon === null);
-      setEmptySpots(emptys);
+      const emptys = album.filter((a) => !a.pokemon);
       let getUnique = false;
       if (emptys.length > 0 && emptys.length < 100) {
         getUnique = true;
@@ -287,7 +232,8 @@ export function PokemonsProvider({ children }: PokemonsProviderProps) {
       await handleSaveManyCards(
         cardQtdToReceive,
         newPokemonListState,
-        getUnique
+        getUnique,
+        emptys
       );
       setLoading(false);
     }

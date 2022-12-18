@@ -90,7 +90,7 @@ export function RegionSelector() {
       const pokemonsOnAlbum = albumState
         .slice(start, end)
         .filter((a) => a.pokemon !== null).length;
-      const regionLength = end - start + 1;
+      const regionLength = end - start;
       const perc = (pokemonsOnAlbum * 100) / regionLength;
       return `'${perc.toFixed(0)}%'`;
     },

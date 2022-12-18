@@ -1,11 +1,13 @@
-import { Flex, useBreakpointValue } from "@chakra-ui/react";
+import { Flex, Spinner, useBreakpointValue } from "@chakra-ui/react";
 import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/react";
 import { AchievementsComponent } from "../components/AchievementsComponent";
 import { Header } from "../components/Header";
 import { Sidebar } from "../components/Sidebar";
+import { useAchievements } from "../hooks/useAchievements";
 
 const Achievements = () => {
+  const { loadingAchievements } = useAchievements();
   const isWideVersion = useBreakpointValue({
     base: false,
     lg: true,
@@ -16,7 +18,7 @@ const Achievements = () => {
       {!isWideVersion && <Header />}
       <Sidebar />
       <Flex minH="100vh" mx="auto" my="6" flexDir="column">
-        <AchievementsComponent />
+        {loadingAchievements ? <Spinner /> : <AchievementsComponent />}
       </Flex>
     </Flex>
   );
